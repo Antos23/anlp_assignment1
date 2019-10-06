@@ -1,20 +1,22 @@
 import re
-
+from itertools import permutations
 
 # task1
-def process_line(str):
+def preprocess_line(str):
     # remove the other characters
     fil1 = re.compile('[^a-zA-Z0-9. ]')
     new_str = fil1.sub('', str)
 
     # convert all digits to 0
-    fil2 = re.compile('[0-9]')
-    new_str = fil2.sub('0', new_str)
-    
-    # new_str = re.sub('[0-9]', "0", new_str) to compress the two lines above 
+    #fil2 = re.compile('[0-9]')
+    #new_str = fil2.sub('0', new_str)
+    new_str = re.sub('[0-9]', "0", new_str) #to compress the two lines above 
 
     # convert all English characters to lower case
     new_str = new_str.lower()
+    
+    #to add # at the beginning and at end of each line
+    new_str = "##" + new_str + "#"
 
     return new_str
 
@@ -28,12 +30,11 @@ def process_line(str):
 
 # task3
 # IMPORTANT QUESTION: DO WE NEED TO ADD '#' AT THE BEGINNING AND THE END OF THE SENTENCE???
-# no add of '#' in following codes
-alpha = [' ', '.', '0', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+# We are adding "##" at the beginning and "#" at the end of each line
+#alpha = [' ', '.', '0', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
          't', 'u', 'v', 'w', 'x', 'y', 'z']
-alpha2 = [' ', '#', '.', '0', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
+alpha = [' ', '#', '.', '0', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
           's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
-
 
 # count n-characters sequence in each line
 def count_character(count_result, str, n):
@@ -51,28 +52,27 @@ def language_model(input_file, language):
     count_character_3 = {}
     for line in input_file:
         # process line as described in task1
-        line = process_line(line)
+        line = preprocess_line(line)
         count_character_2 = count_character(count_character_2, line, 2)
         count_character_3 = count_character(count_character_3, line, 3)
 
     # estimate trigram probabilities
     prob = {}
-    for c1 in alpha:
-        for c2 in alpha:
-            for c3 in alpha:
-                seq2 = ''.join([c1, c2])
-                seq3 = ''.join([c1, c2, c3])
-                # another possible way to obtain all the permutations is using the itertools package
-                #from itertools import permutations
-                #seq2 = [''.join(p) for p in permutations(alpha, 2)]
-                #seq3 = [''.join(p) for p in permutations(alpha, 3)]
-                if seq2 not in count_character_2:
-                    count_character_2[seq2] = 0
-                if seq3 not in count_character_3:
-                    count_character_3[seq3] = 0
+    #for c1 in alpha:
+        #for c2 in alpha:
+            #for c3 in alpha:
+                #seq2 = ''.join([c1, c2])
+                #seq3 = ''.join([c1, c2, c3])
+     # an alternative possible way to obtain all the permutations is using the itertools package
+     seq2 = [''.join(p) for p in permutations(alpha, 2)]
+     seq3 = [''.join(p) for p in permutations(alpha, 3)]
+     if seq2 not in count_character_2:
+        count_character_2[seq2] = 0
+     if seq3 not in count_character_3:
+        count_character_3[seq3] = 0
 
-                # add one smoothing
-                prob[seq3] = (count_character_3[seq3] + 1) / (count_character_2[seq2] + 29)
+      # add one smoothing
+      prob[seq3] = (count_character_3[seq3] + 1) / (count_character_2[seq2] + 29) #or +len(alpha)?
              
 
     # write the trigram model probabilities into file
