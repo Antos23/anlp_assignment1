@@ -10,6 +10,8 @@ def process_line(str):
     # convert all digits to 0
     fil2 = re.compile('[0-9]')
     new_str = fil2.sub('0', new_str)
+    
+    # new_str = re.sub('[0-9]', "0", new_str) to compress the two lines above 
 
     # convert all English characters to lower case
     new_str = new_str.lower()
@@ -60,6 +62,10 @@ def language_model(input_file, language):
             for c3 in alpha:
                 seq2 = ''.join([c1, c2])
                 seq3 = ''.join([c1, c2, c3])
+                # another possible way to obtain all the permutations is using the itertools package
+                #from itertools import permutations
+                #seq2 = [''.join(p) for p in permutations(alpha, 2)]
+                #seq3 = [''.join(p) for p in permutations(alpha, 3)]
                 if seq2 not in count_character_2:
                     count_character_2[seq2] = 0
                 if seq3 not in count_character_3:
@@ -67,6 +73,7 @@ def language_model(input_file, language):
 
                 # add one smoothing
                 prob[seq3] = (count_character_3[seq3] + 1) / (count_character_2[seq2] + 29)
+             
 
     # write the trigram model probabilities into file
     output_file = open('trigram_model.' + language, 'w')
