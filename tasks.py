@@ -100,6 +100,42 @@ def choose_character(new_prob):
     return k
 
 
+#############################
+model = "model-br.en.txt"
+
+def generate2(model):
+    f = open(model)
+    model = {}
+    for line in f:
+        line = line.split('\t')
+        model[line[0]] = float(line[1])
+
+    k=0
+    output = ""
+    while len(output)<300:
+        lineFinished = False
+        line=""
+        output += line
+        threshold = random.uniform(0,1) #don't really know how to use the threshold and if that is actually needed
+        accumulator = 0 
+
+        while not lineFinished:
+            context = str(line[-2:])  
+            population = [k for (k,v) in model.items() if k.startswith(context)]
+            weights = [model[k] for k in population]
+            new_seq, = random.choices(population = population, weights = weights, k=1)
+            line += new_seq[-1]
+            accumulator += model[new_seq]
+            #print(accumulator)
+            output += line
+            if line.endswith("#"):
+                output += " "
+                lineFinished = True
+
+    return output
+
+##############################
+
 def generate_from_LM(model_file_name):
     f = open(model_file_name)
     # read the estimated probability
