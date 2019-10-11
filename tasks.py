@@ -35,7 +35,7 @@ alpha = [' ', '#', '.', '0', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', '
 
 
 # count n-characters sequence in each line
-def count_character(count_result, str, n):
+def count_character(count_result, str, n): #I think it's more clear if we call it count_ngram
     for i in range(0, len(str) - n + 1):
         seq = str[i:i + n]
         if seq not in count_result:
@@ -49,8 +49,8 @@ def count_character(count_result, str, n):
 
 
 def language_model(input_file, language):
-    count_character_2 = {}
-    count_character_3 = {}
+    count_character_2 = {} #bigrams
+    count_character_3 = {} #trigrams
     for line in input_file:
         # process line as described in task1
         line = process_line(line)
@@ -135,8 +135,8 @@ def generate_from_LM(model_file_name):
                 new_prob[item] = prob[head + item]
 
         print(new_prob)
-        k = random.choices(population=list(new_prob.keys()), weights=list(new_prob.values()), k=1)
-        k = k[0]
+        k = random.choices(population=list(new_prob.keys()), weights=list(new_prob.values()), k=1) #trigram_picked
+        k = k[0] #character_picked
         print(k)
         # k = choose_character(new_prob)
         # k = max(new_prob.items(), key=lambda x: x[1])
@@ -145,7 +145,7 @@ def generate_from_LM(model_file_name):
         head = output_str[-2:]
         if k == '#':
             head = '##'
-            output_str += '\n##'
+            output_str += '\n##'  #FANTASTIC!!!!!
 
     print(output_str)
 
