@@ -4,12 +4,10 @@ import re
 # task1
 def process_line(str):
     # remove the other characters
-    fil1 = re.compile('[^a-zA-Z0-9. ]')
-    new_str = fil1.sub('', str)
-
+    new_str = re.sub('[^a-zA-Z0-9. ]', '', str)
+    
     # convert all digits to 0
-    fil2 = re.compile('[0-9]')
-    new_str = fil2.sub('0', new_str)
+    new_str = re.sub('[0-9]', "0", new_str)
 
     # convert all English characters to lower case
     new_str = new_str.lower()
