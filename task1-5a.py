@@ -10,16 +10,13 @@ from sklearn.model_selection import train_test_split
 def preprocess_line(str):
     # remove the other characters
     new_str = re.sub('[^a-zA-Z0-9. ]', '', str)
-
     # convert all digits to 0
     new_str = re.sub('[0-9]', "0", new_str)
-
     # convert all English characters to lower case
     new_str = new_str.lower()
-
     # add '##' at the beginning and '#' at the end of each line
     new_str = '##' + new_str + '#'
-
+    # avoid double spaces
     new_str = ' '.join(new_str.split())
 
     return new_str
@@ -48,7 +45,7 @@ def language_model(input_file, language, alpha):
     for line in input_file:
         # process line as described in task1
         line = preprocess_line(line)
-        bigram_count = count_ngrams(bigram_count, line, 2)
+        bigram_count = count_ngrams(bigram_count, line, 2) 
         trigram_count = count_ngrams(trigram_count, line, 3)
 
     # estimate trigram probabilities
@@ -86,7 +83,6 @@ def language_model(input_file, language, alpha):
 # Split test text into 2 parts: a held-out (validation) text and a test text
 
 def split_input_file(input_file):
-    #
     text = []
     with open(input_file) as f:
         for line in f:
@@ -107,7 +103,9 @@ def split_input_file(input_file):
 # Train the training text with different alphas and choose the one that minimizes the perplexity on the validation test
 def choose_alpha(train_file, validation_file, language):
     perplexities = dict()
-    for alpha in np.arange(0.01, 0.3, 0.01):
+    #we are iterating over such a small value of alpha, with a very small step as we have already iterated from 0.1 to 1 with a 0.1 step.
+    #this is to narrow down the value of alpha without causing a long running time
+    for alpha in np.arange(0.01, 0.3, 0.01): 
         training = open(train_file, 'r')
         language_model(training, language, alpha)  # generate a model for each value of alpha in the range
         perplexities[alpha] = calculate_perplexity('trigram_model.'+language,
@@ -120,13 +118,10 @@ def choose_alpha(train_file, validation_file, language):
     plt.xlabel("alpha")
     plt.ylabel("Perplexity")
     plt.show()
-
     return best_alpha
-
 
 # Task 4
 N = 300
-
 
 def generate_from_LM(model_file_name):
     f = open(model_file_name)
@@ -153,7 +148,6 @@ def generate_from_LM(model_file_name):
             output += '\n##'
 
     return (output)
-
 
 # Task 5
 
@@ -184,10 +178,6 @@ def calculate_perplexity(model, test_file):
     f1.close()
     f2.close()
     return (PPm)
-
-
-# task6
-
 
 if __name__ == '__main__':
     # task3
