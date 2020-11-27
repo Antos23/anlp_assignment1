@@ -1,6 +1,6 @@
 # anlp_assignment
 First Assignment for the Accelerated Natural Language Processing (ANLP) module at the University of Edinburgh (Autumn 2019).
-#### Authors Cui Shaoyan, Antonia Donvito
+#### Authors: Cui Shaoyan, Antonia Donvito
 
  
 This repository contains the following files: 
